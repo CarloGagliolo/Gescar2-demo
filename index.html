@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gescar2 — Gestionale Centro Revisioni</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    :root {
+      --gescar-blue: #0d6efd;
+      --gescar-dark: #212529;
+    }
+    body { background: #f8f9fa; }
+
+    /* ── Navbar ── */
+    .navbar-brand span { font-weight: 700; letter-spacing: -0.5px; }
+    .navbar-search { max-width: 280px; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+      color: #fff;
+      padding: 72px 0 64px;
+    }
+    .hero h1 { font-size: 2.6rem; font-weight: 800; }
+    .hero p { font-size: 1.15rem; opacity: .9; max-width: 560px; }
+    .hero .badge-pill {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: .82rem;
+      color: #fff;
+      display: inline-block;
+      margin: 3px;
+    }
+
+    /* ── KPI cards ── */
+    .kpi-card { border-left: 4px solid; border-radius: 8px; }
+    .kpi-card.danger  { border-color: #dc3545; }
+    .kpi-card.warning { border-color: #ffc107; }
+    .kpi-card.info    { border-color: #0dcaf0; }
+    .kpi-card.success { border-color: #198754; }
+    .kpi-number { font-size: 2.2rem; font-weight: 700; line-height: 1; }
+
+    /* ── Demo shell ── */
+    .app-shell { border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.08); background: #fff; }
+    .app-topbar { background: #fff; border-bottom: 1px solid #dee2e6; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+    .app-topbar .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .app-topbar .url-bar { flex: 1; background: #f1f3f5; border-radius: 6px; padding: 4px 12px; font-size: .78rem; color: #6c757d; }
+
+    /* ── Semaforo badges ── */
+    .badge-semaforo { font-size: .75rem; padding: 4px 8px; }
+
+    /* ── Sezioni ── */
+    .section-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #6c757d; margin-bottom: 6px; }
+    .feature-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+
+    /* ── Footer ── */
+    footer { background: var(--gescar-dark); color: #adb5bd; font-size: .85rem; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+      <i class="bi bi-car-front-fill text-primary fs-5"></i>
+      <span>Gescar2</span>
+    </a>
+    <div class="d-flex align-items-center gap-2 ms-auto">
+      <form class="d-flex navbar-search" role="search">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text bg-secondary border-secondary"><i class="bi bi-search text-light"></i></span>
+          <input type="search" class="form-control bg-secondary border-secondary text-white" placeholder="Cerca cliente o targa…">
+        </div>
+      </form>
+      <div class="vr bg-secondary mx-1"></div>
+      <span class="badge bg-primary rounded-pill"><i class="bi bi-person-fill me-1"></i>Operatore</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════ HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <p class="section-label text-white opacity-75">Demo interattiva</p>
+        <h1 class="mb-3">Gestionale per centri revisioni auto</h1>
+        <p class="mb-4">Tieni sotto controllo tutte le scadenze dei tuoi clienti — revisioni, assicurazioni, bolli e patenti — in un'unica interfaccia. Zero fogli Excel, zero appunti sparsi.</p>
+        <div class="mb-4">
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Scadenze con semaforo</span>
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Ricerca per targa o cliente</span>
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Registro notifiche</span>
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Email e WhatsApp</span>
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Dashboard KPI</span>
+        </div>
+        <a href="#demo" class="btn btn-light btn-lg fw-semibold px-4">
+          <i class="bi bi-play-circle me-2"></i>Esplora la demo
+        </a>
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-end">
+        <div class="d-flex gap-3 justify-content-end flex-wrap">
+          <div class="text-center">
+            <div class="display-4 fw-bold">7k+</div>
+            <div class="opacity-75 small">clienti gestiti</div>
+          </div>
+          <div class="text-center">
+            <div class="display-4 fw-bold">4.5k</div>
+            <div class="opacity-75 small">veicoli tracciati</div>
+          </div>
+          <div class="text-center">
+            <div class="display-4 fw-bold">100%</div>
+            <div class="opacity-75 small">web, no install</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ DEMO APP -->
+<section id="demo" class="py-5">
+  <div class="container">
+    <div class="text-center mb-4">
+      <p class="section-label">Interfaccia</p>
+      <h2 class="fw-bold">Guarda come funziona</h2>
+      <p class="text-muted">Dati completamente fittizi a scopo dimostrativo.</p>
+    </div>
+
+    <!-- Browser shell -->
+    <div class="app-shell">
+      <div class="app-topbar">
+        <div class="dot bg-danger"></div>
+        <div class="dot bg-warning"></div>
+        <div class="dot bg-success"></div>
+        <div class="url-bar">gescar.local / dashboard</div>
+      </div>
+
+      <!-- Tabs nav -->
+      <ul class="nav nav-tabs px-3 pt-2 bg-white border-bottom" id="appTabs">
+        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab-dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-scadenze"><i class="bi bi-calendar-event me-1"></i>Scadenze</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-clienti"><i class="bi bi-people me-1"></i>Clienti</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-cliente"><i class="bi bi-person-vcard me-1"></i>Scheda cliente</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-notifiche"><i class="bi bi-bell me-1"></i>Notifiche</a></li>
+      </ul>
+
+      <div class="tab-content p-4">
+
+        <!-- ── TAB DASHBOARD ── -->
+        <div class="tab-pane fade show active" id="tab-dashboard">
+          <h5 class="fw-semibold mb-4">Riepilogo scadenze imminenti</h5>
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+              <div class="card kpi-card danger h-100">
+                <div class="card-body">
+                  <div class="text-muted small mb-1"><i class="bi bi-tools me-1"></i>Revisioni scadute</div>
+                  <div class="kpi-number text-danger">12</div>
+                  <div class="text-muted small mt-1">da contattare</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card kpi-card warning h-100">
+                <div class="card-body">
+                  <div class="text-muted small mb-1"><i class="bi bi-tools me-1"></i>Revisioni entro 30gg</div>
+                  <div class="kpi-number text-warning">27</div>
+                  <div class="text-muted small mt-1">in scadenza</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card kpi-card info h-100">
+                <div class="card-body">
+                  <div class="text-muted small mb-1"><i class="bi bi-shield-check me-1"></i>Assicurazioni 30gg</div>
+                  <div class="kpi-number text-info">8</div>
+                  <div class="text-muted small mt-1">da rinnovare</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card kpi-card success h-100">
+                <div class="card-body">
+                  <div class="text-muted small mb-1"><i class="bi bi-card-text me-1"></i>Patenti in scadenza</div>
+                  <div class="kpi-number text-success">3</div>
+                  <div class="text-muted small mt-1">entro 60gg</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- mini table -->
+          <h6 class="text-muted mb-2">Revisioni più urgenti</h6>
+          <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+              <thead class="table-light"><tr><th>Cliente</th><th>Targa</th><th>Scadenza revisione</th><th>Stato</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>Rossi Mario</td><td><code>AB123CD</code></td><td>12/01/2026</td><td><span class="badge bg-danger badge-semaforo">Scaduta</span></td><td><button class="btn btn-sm btn-outline-primary py-0">Avvisa</button></td></tr>
+                <tr><td>Bianchi Giulia</td><td><code>EF456GH</code></td><td>20/03/2026</td><td><span class="badge bg-warning text-dark badge-semaforo">Imminente</span></td><td><button class="btn btn-sm btn-outline-primary py-0">Avvisa</button></td></tr>
+                <tr><td>Ferrari Andrea</td><td><code>IL789MN</code></td><td>28/03/2026</td><td><span class="badge bg-warning text-dark badge-semaforo">Imminente</span></td><td><button class="btn btn-sm btn-outline-primary py-0">Avvisa</button></td></tr>
+                <tr><td>Conti Sofia</td><td><code>OP012QR</code></td><td>14/04/2026</td><td><span class="badge bg-info text-dark badge-semaforo">In avvicinamento</span></td><td><button class="btn btn-sm btn-outline-primary py-0">Avvisa</button></td></tr>
+                <tr><td>Marino Luca</td><td><code>ST345UV</code></td><td>30/05/2026</td><td><span class="badge bg-success badge-semaforo">Ok</span></td><td><button class="btn btn-sm btn-outline-secondary py-0">Dettaglio</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── TAB SCADENZE ── -->
+        <div class="tab-pane fade" id="tab-scadenze">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">Scadenze nel periodo</h5>
+            <div class="d-flex gap-2">
+              <input type="date" class="form-control form-control-sm" value="2026-03-01">
+              <span class="align-self-center text-muted">→</span>
+              <input type="date" class="form-control form-control-sm" value="2026-04-30">
+              <button class="btn btn-sm btn-primary">Filtra</button>
+            </div>
+          </div>
+          <ul class="nav nav-pills mb-3" id="scadenzeTabs">
+            <li class="nav-item"><a class="nav-link active" data-bs-toggle="pill" href="#sc-rev"><i class="bi bi-tools me-1"></i>Revisioni <span class="badge bg-danger ms-1">12</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#sc-ass"><i class="bi bi-shield-check me-1"></i>Assicurazioni <span class="badge bg-warning text-dark ms-1">5</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#sc-bol"><i class="bi bi-receipt me-1"></i>Bolli <span class="badge bg-info text-dark ms-1">3</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#sc-pat"><i class="bi bi-card-text me-1"></i>Patenti <span class="badge bg-secondary ms-1">2</span></a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="sc-rev">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead class="table-light"><tr><th>Cliente</th><th>Telefono</th><th>Targa</th><th>Veicolo</th><th>Scadenza</th><th>Stato</th><th>Avvisi</th><th></th></tr></thead>
+                  <tbody>
+                    <tr><td>Rossi Mario</td><td>333 1234567</td><td><code>AB123CD</code></td><td>Fiat Punto</td><td>12/01/2026</td><td><span class="badge bg-danger">Scaduta</span></td><td><i class="bi bi-bell-slash text-muted"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                    <tr><td>Bianchi Giulia</td><td>347 9876543</td><td><code>EF456GH</code></td><td>VW Golf</td><td>20/03/2026</td><td><span class="badge bg-warning text-dark">Imminente</span></td><td><i class="bi bi-bell text-warning"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                    <tr><td>Ferrari Andrea</td><td>320 5554433</td><td><code>IL789MN</code></td><td>Toyota Yaris</td><td>28/03/2026</td><td><span class="badge bg-warning text-dark">Imminente</span></td><td><i class="bi bi-bell-slash text-muted"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                    <tr><td>Conti Sofia</td><td>366 1122334</td><td><code>OP012QR</code></td><td>Renault Clio</td><td>14/04/2026</td><td><span class="badge bg-info text-dark">In avvicinamento</span></td><td><i class="bi bi-bell text-info"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                    <tr><td>Esposito Carlo</td><td>340 9988776</td><td><code>WX678YZ</code></td><td>Ford Focus</td><td>02/04/2026</td><td><span class="badge bg-warning text-dark">Imminente</span></td><td><i class="bi bi-bell-slash text-muted"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="sc-ass"><p class="text-muted p-3">5 assicurazioni in scadenza nel periodo selezionato.</p></div>
+            <div class="tab-pane fade" id="sc-bol"><p class="text-muted p-3">3 bolli in scadenza nel periodo selezionato.</p></div>
+            <div class="tab-pane fade" id="sc-pat"><p class="text-muted p-3">2 patenti in scadenza nel periodo selezionato.</p></div>
+          </div>
+        </div>
+
+        <!-- ── TAB CLIENTI ── -->
+        <div class="tab-pane fade" id="tab-clienti">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">Anagrafiche clienti</h5>
+            <button class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Nuovo cliente</button>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" placeholder="Cerca per cognome, nome o targa veicolo…" id="searchInput" oninput="filterTable()">
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle" id="clientiTable">
+              <thead class="table-light"><tr><th>Cognome</th><th>Nome</th><th>Tipo</th><th>Telefono</th><th>Email</th><th>Veicoli</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>Rossi</td><td>Mario</td><td><span class="badge bg-secondary">Privato</span></td><td>333 1234567</td><td>m.rossi@example.com</td><td>2</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Bianchi</td><td>Giulia</td><td><span class="badge bg-secondary">Privato</span></td><td>347 9876543</td><td>g.bianchi@example.com</td><td>1</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Ferrari</td><td>Andrea</td><td><span class="badge bg-secondary">Privato</span></td><td>320 5554433</td><td>—</td><td>3</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Conti</td><td>Sofia</td><td><span class="badge bg-secondary">Privato</span></td><td>366 1122334</td><td>sofia.conti@example.com</td><td>1</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Autofficina Demo</td><td>Srl</td><td><span class="badge bg-primary">Azienda</span></td><td>02 9988776</td><td>info@autofficina.example</td><td>7</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Marino</td><td>Luca</td><td><span class="badge bg-secondary">Privato</span></td><td>340 7654321</td><td>—</td><td>1</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Esposito</td><td>Carlo</td><td><span class="badge bg-secondary">Privato</span></td><td>340 9988776</td><td>c.esposito@example.com</td><td>2</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── TAB SCHEDA CLIENTE ── -->
+        <div class="tab-pane fade" id="tab-cliente">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h5 class="fw-semibold mb-0">Rossi Mario</h5>
+              <small class="text-muted">Privato · 333 1234567 · m.rossi@example.com</small>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil me-1"></i>Modifica</button>
+              <button class="btn btn-sm btn-primary"><i class="bi bi-bell me-1"></i>Nuovo avviso</button>
+            </div>
+          </div>
+          <div class="row g-4">
+            <!-- Veicoli -->
+            <div class="col-md-7">
+              <h6 class="section-label">Veicoli intestati</h6>
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <strong>Fiat Punto</strong> <code class="ms-2">AB123CD</code>
+                      <div class="text-muted small">Benzina · Berlina · Telaio: ZFA18800000123456</div>
+                    </div>
+                    <a href="#" class="btn btn-sm btn-outline-secondary">Dettaglio</a>
+                  </div>
+                  <div class="mt-2 d-flex flex-wrap gap-2">
+                    <span class="badge bg-danger badge-semaforo"><i class="bi bi-tools me-1"></i>Revisione scad. 12/01/2026</span>
+                    <span class="badge bg-success badge-semaforo"><i class="bi bi-shield-check me-1"></i>Assic. ok 15/11/2026</span>
+                    <span class="badge bg-info text-dark badge-semaforo"><i class="bi bi-receipt me-1"></i>Bollo apr 2026</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <strong>Ford Transit</strong> <code class="ms-2">XY987WZ</code>
+                      <div class="text-muted small">Gasolio · Furgone · <span class="badge bg-secondary" style="font-size:.7rem">Esente revisione</span></div>
+                    </div>
+                    <a href="#" class="btn btn-sm btn-outline-secondary">Dettaglio</a>
+                  </div>
+                  <div class="mt-2 d-flex flex-wrap gap-2">
+                    <span class="badge bg-secondary badge-semaforo"><i class="bi bi-tools me-1"></i>Revisione: esente</span>
+                    <span class="badge bg-warning text-dark badge-semaforo"><i class="bi bi-shield-check me-1"></i>Assic. scad. 31/03/2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Storico notifiche -->
+            <div class="col-md-5">
+              <h6 class="section-label">Storico avvisi</h6>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item px-0">
+                  <div class="d-flex justify-content-between">
+                    <span><i class="bi bi-whatsapp text-success me-1"></i><small>WhatsApp</small></span>
+                    <small class="text-muted">10/03/2026</small>
+                  </div>
+                  <div class="small">Revisione AB123CD · <span class="badge bg-warning text-dark" style="font-size:.65rem">non risponde</span></div>
+                </li>
+                <li class="list-group-item px-0">
+                  <div class="d-flex justify-content-between">
+                    <span><i class="bi bi-telephone text-primary me-1"></i><small>Telefono</small></span>
+                    <small class="text-muted">05/03/2026</small>
+                  </div>
+                  <div class="small">Revisione AB123CD · <span class="badge bg-success" style="font-size:.65rem">inviata</span></div>
+                </li>
+                <li class="list-group-item px-0">
+                  <div class="d-flex justify-content-between">
+                    <span><i class="bi bi-envelope text-info me-1"></i><small>Email</small></span>
+                    <small class="text-muted">01/03/2026</small>
+                  </div>
+                  <div class="small">Assicurazione XY987WZ · <span class="badge bg-success" style="font-size:.65rem">inviata</span></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TAB NOTIFICHE ── -->
+        <div class="tab-pane fade" id="tab-notifiche">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">Registro avvisi</h5>
+            <button class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Registra avviso</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle table-sm">
+              <thead class="table-light"><tr><th>Data</th><th>Cliente</th><th>Targa</th><th>Tipo scadenza</th><th>Canale</th><th>Esito</th><th>Operatore</th></tr></thead>
+              <tbody>
+                <tr><td>10/03/2026</td><td>Rossi Mario</td><td><code>AB123CD</code></td><td>Revisione</td><td><i class="bi bi-whatsapp text-success"></i> WhatsApp</td><td><span class="badge bg-warning text-dark">non risponde</span></td><td>Operatore 1</td></tr>
+                <tr><td>10/03/2026</td><td>Ferrari Andrea</td><td><code>IL789MN</code></td><td>Revisione</td><td><i class="bi bi-telephone text-primary"></i> Telefono</td><td><span class="badge bg-success">rinnovato</span></td><td>Operatore 1</td></tr>
+                <tr><td>09/03/2026</td><td>Bianchi Giulia</td><td><code>EF456GH</code></td><td>Assicurazione</td><td><i class="bi bi-envelope text-info"></i> Email</td><td><span class="badge bg-success">inviata</span></td><td>Operatore 2</td></tr>
+                <tr><td>08/03/2026</td><td>Conti Sofia</td><td><code>OP012QR</code></td><td>Revisione</td><td><i class="bi bi-telephone text-primary"></i> Telefono</td><td><span class="badge bg-secondary">non interessato</span></td><td>Operatore 1</td></tr>
+                <tr><td>07/03/2026</td><td>Esposito Carlo</td><td><code>WX678YZ</code></td><td>Bollo</td><td><i class="bi bi-chat-dots text-success"></i> SMS</td><td><span class="badge bg-success">inviata</span></td><td>Operatore 2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /tab-content -->
+    </div><!-- /app-shell -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ FEATURE CARDS -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-label">Funzionalità</p>
+      <h2 class="fw-bold">Tutto quello che serve, niente di più</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-icon bg-danger bg-opacity-10 mb-3"><i class="bi bi-speedometer2 text-danger"></i></div>
+        <h5 class="fw-semibold">Dashboard a colpo d'occhio</h5>
+        <p class="text-muted">KPI colorati per vedere immediatamente cosa è scaduto, cosa scade presto e cosa è a posto. Nessuna analisi manuale.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-primary bg-opacity-10 mb-3"><i class="bi bi-search text-primary"></i></div>
+        <h5 class="fw-semibold">Ricerca istantanea</h5>
+        <p class="text-muted">Cerca un cliente per nome, cognome o targa del veicolo direttamente dalla barra di navigazione. Risultati immediati.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-success bg-opacity-10 mb-3"><i class="bi bi-bell text-success"></i></div>
+        <h5 class="fw-semibold">Registro notifiche</h5>
+        <p class="text-muted">Ogni contatto con il cliente — telefonata, SMS, email, WhatsApp — viene registrato con data, canale ed esito. Storico sempre disponibile.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-warning bg-opacity-10 mb-3"><i class="bi bi-car-front text-warning"></i></div>
+        <h5 class="fw-semibold">Tutti i tipi di scadenza</h5>
+        <p class="text-muted">Revisioni, assicurazioni, bolli, patenti e collaudi impianto GPL/metano. Gestiti con logica e soglie separate per ciascuna categoria.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-info bg-opacity-10 mb-3"><i class="bi bi-send text-info"></i></div>
+        <h5 class="fw-semibold">Invio email e WhatsApp</h5>
+        <p class="text-muted">Il sistema può inviare notifiche direttamente dall'interfaccia e registrarle automaticamente nel log del cliente.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-secondary bg-opacity-10 mb-3"><i class="bi bi-shield-lock text-secondary"></i></div>
+        <h5 class="fw-semibold">Accesso protetto</h5>
+        <p class="text-muted">Login sicuro con due livelli di ruolo. L'intera applicazione richiede autenticazione. Nessuna pagina esposta pubblicamente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ STACK -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-4">
+      <p class="section-label">Stack tecnologico</p>
+      <h2 class="fw-bold">Costruito su tecnologie solide</h2>
+    </div>
+    <div class="row justify-content-center g-3">
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">PHP 8.2</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">Symfony 7.3</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">Doctrine ORM 3</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">MySQL 8.0</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">Bootstrap 5.3</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">Docker</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ FOOTER -->
+<footer class="py-4">
+  <div class="container text-center">
+    <p class="mb-1"><i class="bi bi-car-front-fill text-primary me-1"></i><strong class="text-white">Gescar2</strong> — Gestionale Centro Revisioni</p>
+    <p class="mb-0 small">Demo dimostrativa · Tutti i dati mostrati sono fittizi · Uso interno</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Ricerca live nella tabella clienti
+  function filterTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('#clientiTable tbody tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
