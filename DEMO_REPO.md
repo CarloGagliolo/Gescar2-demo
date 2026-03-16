@@ -78,3 +78,4 @@ Non è necessario sincronizzare con il repo di produzione — è una vetrina ind
 - [ ] Nessun riferimento al nome del centro reale (sostituire con "Centro Revisioni Demo")
 - [ ] Link `https://carlogagliolo.github.io/gescar-demo` funzionante
 - [ ] README aggiornato con il link corretto alla demo live
+
