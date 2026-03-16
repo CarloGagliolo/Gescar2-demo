@@ -1,0 +1,6 @@
+# This is a .gitignore file
+
+# Ignore sensitive files
+.env
+*.secret
+*.key
