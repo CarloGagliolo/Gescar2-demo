@@ -1,898 +1,457 @@
 <!DOCTYPE html>
-<html lang="it" data-bs-theme="light">
+<html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gescar – Demo Centro Revisioni</title>
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-        crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gescar2 — Gestionale Centro Revisioni</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
-    /* ── Layout ─────────────────────────────────────────────────────────── */
-    .sidebar {
-      position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
-      padding: 56px 0 0; width: 220px;
-      box-shadow: inset -1px 0 0 rgba(0,0,0,.1);
+    :root {
+      --gescar-blue: #0d6efd;
+      --gescar-dark: #212529;
     }
-    .sidebar .nav-link { font-size: .9rem; color: #333; padding: .4rem 1rem; }
-    .sidebar .nav-link:hover, .sidebar .nav-link.active {
-      background-color: rgba(0,0,0,.05); color: #0d6efd;
+    body { background: #f8f9fa; }
+
+    /* ── Navbar ── */
+    .navbar-brand span { font-weight: 700; letter-spacing: -0.5px; }
+    .navbar-search { max-width: 280px; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+      color: #fff;
+      padding: 72px 0 64px;
     }
-    .sidebar .nav-link i { margin-right: .4rem; width: 18px; text-align: center; }
-    .main-content { margin-left: 220px; padding: 1rem 1.5rem; }
-
-    @media (max-width: 767.98px) {
-      .sidebar { display: none; }
-      .main-content { margin-left: 0; }
-    }
-
-    /* ── Semaforo badges ─────────────────────────────────────────────────── */
-    .badge-scad-ok      { background-color: #198754; color: #fff; }
-    .badge-scad-warning { background-color: #ffc107; color: #212529; }
-    .badge-scad-danger  { background-color: #dc3545; color: #fff; }
-
-    /* ── KPI card accents ────────────────────────────────────────────────── */
-    .kpi-danger  { border-left: 4px solid #dc3545; }
-    .kpi-warning { border-left: 4px solid #ffc107; }
-    .kpi-ok      { border-left: 4px solid #198754; }
-    .kpi-total   { border-left: 4px solid #0d6efd; }
-
-    /* ── Demo badge ──────────────────────────────────────────────────────── */
-    .demo-badge {
-      position: fixed; bottom: 1rem; right: 1rem; z-index: 9999;
-      background: #0d6efd; color: #fff; font-size: .75rem; font-weight: 600;
-      padding: .35rem .75rem; border-radius: 999px; letter-spacing: .05em;
-      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    .hero h1 { font-size: 2.6rem; font-weight: 800; }
+    .hero p { font-size: 1.15rem; opacity: .9; max-width: 560px; }
+    .hero .badge-pill {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: .82rem;
+      color: #fff;
+      display: inline-block;
+      margin: 3px;
     }
 
-    /* ── Toast container ─────────────────────────────────────────────────── */
-    .toast-container { position: fixed; top: 70px; right: 1rem; z-index: 9998; }
+    /* ── KPI cards ── */
+    .kpi-card { border-left: 4px solid; border-radius: 8px; }
+    .kpi-card.danger  { border-color: #dc3545; }
+    .kpi-card.warning { border-color: #ffc107; }
+    .kpi-card.info    { border-color: #0dcaf0; }
+    .kpi-card.success { border-color: #198754; }
+    .kpi-number { font-size: 2.2rem; font-weight: 700; line-height: 1; }
 
-    /* ── View transition ─────────────────────────────────────────────────── */
-    #app-views > div { animation: fadeIn .15s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    /* ── Demo shell ── */
+    .app-shell { border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.08); background: #fff; }
+    .app-topbar { background: #fff; border-bottom: 1px solid #dee2e6; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+    .app-topbar .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .app-topbar .url-bar { flex: 1; background: #f1f3f5; border-radius: 6px; padding: 4px 12px; font-size: .78rem; color: #6c757d; }
+
+    /* ── Semaforo badges ── */
+    .badge-semaforo { font-size: .75rem; padding: 4px 8px; }
+
+    /* ── Sezioni ── */
+    .section-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #6c757d; margin-bottom: 6px; }
+    .feature-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+
+    /* ── Footer ── */
+    footer { background: var(--gescar-dark); color: #adb5bd; font-size: .85rem; }
   </style>
 </head>
 <body>
 
-<!-- ── Navbar ─────────────────────────────────────────────────────────────── -->
-<nav class="navbar navbar-dark bg-dark fixed-top px-3 py-1">
-  <a class="navbar-brand d-flex align-items-center gap-2" href="#dashboard" style="text-decoration:none">
-    <i class="bi bi-car-front-fill fs-5"></i>
-    <span class="fw-bold">Gescar</span>
-    <span class="badge bg-primary ms-1" style="font-size:.6rem;vertical-align:middle">DEMO</span>
-  </a>
-
-  <!-- Quick search -->
-  <form class="d-flex flex-grow-1 mx-3" onsubmit="doQuickSearch(); return false;" style="max-width:400px">
-    <div class="input-group input-group-sm">
-      <input class="form-control" type="search" id="quick-search-input"
-             placeholder="Cerca cliente o targa…" autocomplete="off">
-      <button class="btn btn-outline-light" type="submit">
-        <i class="bi bi-search"></i>
-      </button>
+<!-- ═══════════════════════════════════════════════════════════ NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+      <i class="bi bi-car-front-fill text-primary fs-5"></i>
+      <span>Gescar2</span>
+    </a>
+    <div class="d-flex align-items-center gap-2 ms-auto">
+      <form class="d-flex navbar-search" role="search">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text bg-secondary border-secondary"><i class="bi bi-search text-light"></i></span>
+          <input type="search" class="form-control bg-secondary border-secondary text-white" placeholder="Cerca cliente o targa…">
+        </div>
+      </form>
+      <div class="vr bg-secondary mx-1"></div>
+      <span class="badge bg-primary rounded-pill"><i class="bi bi-person-fill me-1"></i>Operatore</span>
     </div>
-  </form>
-
-  <!-- User pill -->
-  <span class="text-light small d-none d-lg-inline">
-    <i class="bi bi-person-circle me-1"></i>demo@gescar.it
-  </span>
-
-  <!-- Mobile toggle -->
-  <button class="navbar-toggler ms-2 d-md-none" type="button"
-          data-bs-toggle="offcanvas" data-bs-target="#sidebarMobile">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-</nav>
-
-<!-- ── Sidebar desktop ────────────────────────────────────────────────────── -->
-<nav class="sidebar bg-body-tertiary d-none d-md-block">
-  <div class="position-sticky pt-3">
-    <p class="px-3 text-uppercase text-muted small fw-semibold mb-1" style="font-size:.7rem">Menu</p>
-    <ul class="nav flex-column mb-3">
-      <li class="nav-item">
-        <a class="nav-link" href="#dashboard" data-nav="dashboard">
-          <i class="bi bi-speedometer2"></i> Dashboard
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#scadenze" data-nav="scadenze">
-          <i class="bi bi-calendar-event"></i> Scadenze
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#notifiche" data-nav="notifiche">
-          <i class="bi bi-bell"></i> Notifiche
-        </a>
-      </li>
-    </ul>
-    <p class="px-3 text-uppercase text-muted small fw-semibold mb-1" style="font-size:.7rem">Anagrafica</p>
-    <ul class="nav flex-column mb-3">
-      <li class="nav-item">
-        <a class="nav-link" href="#clienti" data-nav="clienti">
-          <i class="bi bi-people"></i> Clienti
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#veicoli" data-nav="veicoli">
-          <i class="bi bi-car-front"></i> Veicoli
-        </a>
-      </li>
-    </ul>
   </div>
 </nav>
 
-<!-- ── Sidebar mobile offcanvas ───────────────────────────────────────────── -->
-<div class="offcanvas offcanvas-start d-md-none" id="sidebarMobile" tabindex="-1">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title">Gescar <span class="badge bg-primary" style="font-size:.65rem">DEMO</span></h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-  </div>
-  <div class="offcanvas-body">
-    <ul class="nav flex-column">
-      <li><a class="nav-link" href="#dashboard" data-bs-dismiss="offcanvas"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-      <li><a class="nav-link" href="#scadenze" data-bs-dismiss="offcanvas"><i class="bi bi-calendar-event me-2"></i>Scadenze</a></li>
-      <li><a class="nav-link" href="#notifiche" data-bs-dismiss="offcanvas"><i class="bi bi-bell me-2"></i>Notifiche</a></li>
-      <li><hr class="my-1"></li>
-      <li><a class="nav-link" href="#clienti" data-bs-dismiss="offcanvas"><i class="bi bi-people me-2"></i>Clienti</a></li>
-      <li><a class="nav-link" href="#veicoli" data-bs-dismiss="offcanvas"><i class="bi bi-car-front me-2"></i>Veicoli</a></li>
-    </ul>
-  </div>
-</div>
-
-<!-- ── Toast container ────────────────────────────────────────────────────── -->
-<div class="toast-container" id="toast-container"></div>
-
-<!-- ── Main content ───────────────────────────────────────────────────────── -->
-<main class="main-content" style="margin-top:56px">
-  <div id="app-views"></div>
-</main>
-
-<!-- ── Notification Modal ─────────────────────────────────────────────────── -->
-<div class="modal fade" id="notificaModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-bell-fill text-warning me-2"></i>Invia Notifica</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- ═══════════════════════════════════════════════════════════ HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <p class="section-label text-white opacity-75">Demo interattiva</p>
+        <h1 class="mb-3">Gestionale per centri revisioni auto</h1>
+        <p class="mb-4">Tieni sotto controllo tutte le scadenze dei tuoi clienti — revisioni, assicurazioni, bolli e patenti — in un'unica interfaccia. Zero fogli Excel, zero appunti sparsi.</p>
+        <div class="mb-4">
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Scadenze con semaforo</span>
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Ricerca per targa o cliente</span>
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Registro notifiche</span>
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Email e WhatsApp</span>
+          <span class="badge-pill"><i class="bi bi-check2 me-1"></i>Dashboard KPI</span>
+        </div>
+        <a href="#demo" class="btn btn-light btn-lg fw-semibold px-4">
+          <i class="bi bi-play-circle me-2"></i>Esplora la demo
+        </a>
       </div>
-      <div class="modal-body">
-        <div class="alert alert-info py-2 small mb-3" id="modal-scad-info"></div>
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Destinatario</label>
-          <input type="text" class="form-control" id="modal-destinatario" readonly>
+      <div class="col-lg-6 d-none d-lg-block text-end">
+        <div class="d-flex gap-3 justify-content-end flex-wrap">
+          <div class="text-center">
+            <div class="display-4 fw-bold">7k+</div>
+            <div class="opacity-75 small">clienti gestiti</div>
+          </div>
+          <div class="text-center">
+            <div class="display-4 fw-bold">4.5k</div>
+            <div class="opacity-75 small">veicoli tracciati</div>
+          </div>
+          <div class="text-center">
+            <div class="display-4 fw-bold">100%</div>
+            <div class="opacity-75 small">web, no install</div>
+          </div>
         </div>
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Email</label>
-          <input type="email" class="form-control" id="modal-email" readonly>
-        </div>
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Messaggio</label>
-          <textarea class="form-control" id="modal-messaggio" rows="5"></textarea>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="modal-via-email" checked>
-          <label class="form-check-label" for="modal-via-email"><i class="bi bi-envelope me-1"></i>Email</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="modal-via-sms">
-          <label class="form-check-label" for="modal-via-sms"><i class="bi bi-phone me-1"></i>SMS</label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
-        <button type="button" class="btn btn-primary" onclick="inviaNotifica()">
-          <i class="bi bi-send me-1"></i>Invia notifica
-        </button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ── Demo badge ─────────────────────────────────────────────────────────── -->
-<div class="demo-badge"><i class="bi bi-play-circle me-1"></i>DEMO – dati fittizi</div>
+<!-- ═══════════════════════════════════════════════════════════ DEMO APP -->
+<section id="demo" class="py-5">
+  <div class="container">
+    <div class="text-center mb-4">
+      <p class="section-label">Interfaccia</p>
+      <h2 class="fw-bold">Guarda come funziona</h2>
+      <p class="text-muted">Dati completamente fittizi a scopo dimostrativo.</p>
+    </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmAt5fD4JOf5b8bBIAFEKQqluZnX"
-        crossorigin="anonymous"></script>
+    <!-- Browser shell -->
+    <div class="app-shell">
+      <div class="app-topbar">
+        <div class="dot bg-danger"></div>
+        <div class="dot bg-warning"></div>
+        <div class="dot bg-success"></div>
+        <div class="url-bar">gescar.local / dashboard</div>
+      </div>
 
+      <!-- Tabs nav -->
+      <ul class="nav nav-tabs px-3 pt-2 bg-white border-bottom" id="appTabs">
+        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab-dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-scadenze"><i class="bi bi-calendar-event me-1"></i>Scadenze</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-clienti"><i class="bi bi-people me-1"></i>Clienti</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-cliente"><i class="bi bi-person-vcard me-1"></i>Scheda cliente</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-notifiche"><i class="bi bi-bell me-1"></i>Notifiche</a></li>
+      </ul>
+
+      <div class="tab-content p-4">
+
+        <!-- ── TAB DASHBOARD ── -->
+        <div class="tab-pane fade show active" id="tab-dashboard">
+          <h5 class="fw-semibold mb-4">Riepilogo scadenze imminenti</h5>
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+              <div class="card kpi-card danger h-100">
+                <div class="card-body">
+                  <div class="text-muted small mb-1"><i class="bi bi-tools me-1"></i>Revisioni scadute</div>
+                  <div class="kpi-number text-danger">12</div>
+                  <div class="text-muted small mt-1">da contattare</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card kpi-card warning h-100">
+                <div class="card-body">
+                  <div class="text-muted small mb-1"><i class="bi bi-tools me-1"></i>Revisioni entro 30gg</div>
+                  <div class="kpi-number text-warning">27</div>
+                  <div class="text-muted small mt-1">in scadenza</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card kpi-card info h-100">
+                <div class="card-body">
+                  <div class="text-muted small mb-1"><i class="bi bi-shield-check me-1"></i>Assicurazioni 30gg</div>
+                  <div class="kpi-number text-info">8</div>
+                  <div class="text-muted small mt-1">da rinnovare</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card kpi-card success h-100">
+                <div class="card-body">
+                  <div class="text-muted small mb-1"><i class="bi bi-card-text me-1"></i>Patenti in scadenza</div>
+                  <div class="kpi-number text-success">3</div>
+                  <div class="text-muted small mt-1">entro 60gg</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- mini table -->
+          <h6 class="text-muted mb-2">Revisioni più urgenti</h6>
+          <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+              <thead class="table-light"><tr><th>Cliente</th><th>Targa</th><th>Scadenza revisione</th><th>Stato</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>Rossi Mario</td><td><code>AB123CD</code></td><td>12/01/2026</td><td><span class="badge bg-danger badge-semaforo">Scaduta</span></td><td><button class="btn btn-sm btn-outline-primary py-0">Avvisa</button></td></tr>
+                <tr><td>Bianchi Giulia</td><td><code>EF456GH</code></td><td>20/03/2026</td><td><span class="badge bg-warning text-dark badge-semaforo">Imminente</span></td><td><button class="btn btn-sm btn-outline-primary py-0">Avvisa</button></td></tr>
+                <tr><td>Ferrari Andrea</td><td><code>IL789MN</code></td><td>28/03/2026</td><td><span class="badge bg-warning text-dark badge-semaforo">Imminente</span></td><td><button class="btn btn-sm btn-outline-primary py-0">Avvisa</button></td></tr>
+                <tr><td>Conti Sofia</td><td><code>OP012QR</code></td><td>14/04/2026</td><td><span class="badge bg-info text-dark badge-semaforo">In avvicinamento</span></td><td><button class="btn btn-sm btn-outline-primary py-0">Avvisa</button></td></tr>
+                <tr><td>Marino Luca</td><td><code>ST345UV</code></td><td>30/05/2026</td><td><span class="badge bg-success badge-semaforo">Ok</span></td><td><button class="btn btn-sm btn-outline-secondary py-0">Dettaglio</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── TAB SCADENZE ── -->
+        <div class="tab-pane fade" id="tab-scadenze">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">Scadenze nel periodo</h5>
+            <div class="d-flex gap-2">
+              <input type="date" class="form-control form-control-sm" value="2026-03-01">
+              <span class="align-self-center text-muted">→</span>
+              <input type="date" class="form-control form-control-sm" value="2026-04-30">
+              <button class="btn btn-sm btn-primary">Filtra</button>
+            </div>
+          </div>
+          <ul class="nav nav-pills mb-3" id="scadenzeTabs">
+            <li class="nav-item"><a class="nav-link active" data-bs-toggle="pill" href="#sc-rev"><i class="bi bi-tools me-1"></i>Revisioni <span class="badge bg-danger ms-1">12</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#sc-ass"><i class="bi bi-shield-check me-1"></i>Assicurazioni <span class="badge bg-warning text-dark ms-1">5</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#sc-bol"><i class="bi bi-receipt me-1"></i>Bolli <span class="badge bg-info text-dark ms-1">3</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#sc-pat"><i class="bi bi-card-text me-1"></i>Patenti <span class="badge bg-secondary ms-1">2</span></a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="sc-rev">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead class="table-light"><tr><th>Cliente</th><th>Telefono</th><th>Targa</th><th>Veicolo</th><th>Scadenza</th><th>Stato</th><th>Avvisi</th><th></th></tr></thead>
+                  <tbody>
+                    <tr><td>Rossi Mario</td><td>333 1234567</td><td><code>AB123CD</code></td><td>Fiat Punto</td><td>12/01/2026</td><td><span class="badge bg-danger">Scaduta</span></td><td><i class="bi bi-bell-slash text-muted"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                    <tr><td>Bianchi Giulia</td><td>347 9876543</td><td><code>EF456GH</code></td><td>VW Golf</td><td>20/03/2026</td><td><span class="badge bg-warning text-dark">Imminente</span></td><td><i class="bi bi-bell text-warning"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                    <tr><td>Ferrari Andrea</td><td>320 5554433</td><td><code>IL789MN</code></td><td>Toyota Yaris</td><td>28/03/2026</td><td><span class="badge bg-warning text-dark">Imminente</span></td><td><i class="bi bi-bell-slash text-muted"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                    <tr><td>Conti Sofia</td><td>366 1122334</td><td><code>OP012QR</code></td><td>Renault Clio</td><td>14/04/2026</td><td><span class="badge bg-info text-dark">In avvicinamento</span></td><td><i class="bi bi-bell text-info"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                    <tr><td>Esposito Carlo</td><td>340 9988776</td><td><code>WX678YZ</code></td><td>Ford Focus</td><td>02/04/2026</td><td><span class="badge bg-warning text-dark">Imminente</span></td><td><i class="bi bi-bell-slash text-muted"></i></td><td><a href="#" class="btn btn-sm btn-outline-primary">🔔</a></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="sc-ass"><p class="text-muted p-3">5 assicurazioni in scadenza nel periodo selezionato.</p></div>
+            <div class="tab-pane fade" id="sc-bol"><p class="text-muted p-3">3 bolli in scadenza nel periodo selezionato.</p></div>
+            <div class="tab-pane fade" id="sc-pat"><p class="text-muted p-3">2 patenti in scadenza nel periodo selezionato.</p></div>
+          </div>
+        </div>
+
+        <!-- ── TAB CLIENTI ── -->
+        <div class="tab-pane fade" id="tab-clienti">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">Anagrafiche clienti</h5>
+            <button class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Nuovo cliente</button>
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" placeholder="Cerca per cognome, nome o targa veicolo…" id="searchInput" oninput="filterTable()">
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle" id="clientiTable">
+              <thead class="table-light"><tr><th>Cognome</th><th>Nome</th><th>Tipo</th><th>Telefono</th><th>Email</th><th>Veicoli</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>Rossi</td><td>Mario</td><td><span class="badge bg-secondary">Privato</span></td><td>333 1234567</td><td>m.rossi@example.com</td><td>2</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Bianchi</td><td>Giulia</td><td><span class="badge bg-secondary">Privato</span></td><td>347 9876543</td><td>g.bianchi@example.com</td><td>1</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Ferrari</td><td>Andrea</td><td><span class="badge bg-secondary">Privato</span></td><td>320 5554433</td><td>—</td><td>3</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Conti</td><td>Sofia</td><td><span class="badge bg-secondary">Privato</span></td><td>366 1122334</td><td>sofia.conti@example.com</td><td>1</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Autofficina Demo</td><td>Srl</td><td><span class="badge bg-primary">Azienda</span></td><td>02 9988776</td><td>info@autofficina.example</td><td>7</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Marino</td><td>Luca</td><td><span class="badge bg-secondary">Privato</span></td><td>340 7654321</td><td>—</td><td>1</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+                <tr><td>Esposito</td><td>Carlo</td><td><span class="badge bg-secondary">Privato</span></td><td>340 9988776</td><td>c.esposito@example.com</td><td>2</td><td><a href="#" class="btn btn-sm btn-outline-secondary">Scheda</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── TAB SCHEDA CLIENTE ── -->
+        <div class="tab-pane fade" id="tab-cliente">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h5 class="fw-semibold mb-0">Rossi Mario</h5>
+              <small class="text-muted">Privato · 333 1234567 · m.rossi@example.com</small>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil me-1"></i>Modifica</button>
+              <button class="btn btn-sm btn-primary"><i class="bi bi-bell me-1"></i>Nuovo avviso</button>
+            </div>
+          </div>
+          <div class="row g-4">
+            <!-- Veicoli -->
+            <div class="col-md-7">
+              <h6 class="section-label">Veicoli intestati</h6>
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <strong>Fiat Punto</strong> <code class="ms-2">AB123CD</code>
+                      <div class="text-muted small">Benzina · Berlina · Telaio: ZFA18800000123456</div>
+                    </div>
+                    <a href="#" class="btn btn-sm btn-outline-secondary">Dettaglio</a>
+                  </div>
+                  <div class="mt-2 d-flex flex-wrap gap-2">
+                    <span class="badge bg-danger badge-semaforo"><i class="bi bi-tools me-1"></i>Revisione scad. 12/01/2026</span>
+                    <span class="badge bg-success badge-semaforo"><i class="bi bi-shield-check me-1"></i>Assic. ok 15/11/2026</span>
+                    <span class="badge bg-info text-dark badge-semaforo"><i class="bi bi-receipt me-1"></i>Bollo apr 2026</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <strong>Ford Transit</strong> <code class="ms-2">XY987WZ</code>
+                      <div class="text-muted small">Gasolio · Furgone · <span class="badge bg-secondary" style="font-size:.7rem">Esente revisione</span></div>
+                    </div>
+                    <a href="#" class="btn btn-sm btn-outline-secondary">Dettaglio</a>
+                  </div>
+                  <div class="mt-2 d-flex flex-wrap gap-2">
+                    <span class="badge bg-secondary badge-semaforo"><i class="bi bi-tools me-1"></i>Revisione: esente</span>
+                    <span class="badge bg-warning text-dark badge-semaforo"><i class="bi bi-shield-check me-1"></i>Assic. scad. 31/03/2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Storico notifiche -->
+            <div class="col-md-5">
+              <h6 class="section-label">Storico avvisi</h6>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item px-0">
+                  <div class="d-flex justify-content-between">
+                    <span><i class="bi bi-whatsapp text-success me-1"></i><small>WhatsApp</small></span>
+                    <small class="text-muted">10/03/2026</small>
+                  </div>
+                  <div class="small">Revisione AB123CD · <span class="badge bg-warning text-dark" style="font-size:.65rem">non risponde</span></div>
+                </li>
+                <li class="list-group-item px-0">
+                  <div class="d-flex justify-content-between">
+                    <span><i class="bi bi-telephone text-primary me-1"></i><small>Telefono</small></span>
+                    <small class="text-muted">05/03/2026</small>
+                  </div>
+                  <div class="small">Revisione AB123CD · <span class="badge bg-success" style="font-size:.65rem">inviata</span></div>
+                </li>
+                <li class="list-group-item px-0">
+                  <div class="d-flex justify-content-between">
+                    <span><i class="bi bi-envelope text-info me-1"></i><small>Email</small></span>
+                    <small class="text-muted">01/03/2026</small>
+                  </div>
+                  <div class="small">Assicurazione XY987WZ · <span class="badge bg-success" style="font-size:.65rem">inviata</span></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TAB NOTIFICHE ── -->
+        <div class="tab-pane fade" id="tab-notifiche">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">Registro avvisi</h5>
+            <button class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Registra avviso</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle table-sm">
+              <thead class="table-light"><tr><th>Data</th><th>Cliente</th><th>Targa</th><th>Tipo scadenza</th><th>Canale</th><th>Esito</th><th>Operatore</th></tr></thead>
+              <tbody>
+                <tr><td>10/03/2026</td><td>Rossi Mario</td><td><code>AB123CD</code></td><td>Revisione</td><td><i class="bi bi-whatsapp text-success"></i> WhatsApp</td><td><span class="badge bg-warning text-dark">non risponde</span></td><td>Operatore 1</td></tr>
+                <tr><td>10/03/2026</td><td>Ferrari Andrea</td><td><code>IL789MN</code></td><td>Revisione</td><td><i class="bi bi-telephone text-primary"></i> Telefono</td><td><span class="badge bg-success">rinnovato</span></td><td>Operatore 1</td></tr>
+                <tr><td>09/03/2026</td><td>Bianchi Giulia</td><td><code>EF456GH</code></td><td>Assicurazione</td><td><i class="bi bi-envelope text-info"></i> Email</td><td><span class="badge bg-success">inviata</span></td><td>Operatore 2</td></tr>
+                <tr><td>08/03/2026</td><td>Conti Sofia</td><td><code>OP012QR</code></td><td>Revisione</td><td><i class="bi bi-telephone text-primary"></i> Telefono</td><td><span class="badge bg-secondary">non interessato</span></td><td>Operatore 1</td></tr>
+                <tr><td>07/03/2026</td><td>Esposito Carlo</td><td><code>WX678YZ</code></td><td>Bollo</td><td><i class="bi bi-chat-dots text-success"></i> SMS</td><td><span class="badge bg-success">inviata</span></td><td>Operatore 2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /tab-content -->
+    </div><!-- /app-shell -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ FEATURE CARDS -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-label">Funzionalità</p>
+      <h2 class="fw-bold">Tutto quello che serve, niente di più</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-icon bg-danger bg-opacity-10 mb-3"><i class="bi bi-speedometer2 text-danger"></i></div>
+        <h5 class="fw-semibold">Dashboard a colpo d'occhio</h5>
+        <p class="text-muted">KPI colorati per vedere immediatamente cosa è scaduto, cosa scade presto e cosa è a posto. Nessuna analisi manuale.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-primary bg-opacity-10 mb-3"><i class="bi bi-search text-primary"></i></div>
+        <h5 class="fw-semibold">Ricerca istantanea</h5>
+        <p class="text-muted">Cerca un cliente per nome, cognome o targa del veicolo direttamente dalla barra di navigazione. Risultati immediati.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-success bg-opacity-10 mb-3"><i class="bi bi-bell text-success"></i></div>
+        <h5 class="fw-semibold">Registro notifiche</h5>
+        <p class="text-muted">Ogni contatto con il cliente — telefonata, SMS, email, WhatsApp — viene registrato con data, canale ed esito. Storico sempre disponibile.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-warning bg-opacity-10 mb-3"><i class="bi bi-car-front text-warning"></i></div>
+        <h5 class="fw-semibold">Tutti i tipi di scadenza</h5>
+        <p class="text-muted">Revisioni, assicurazioni, bolli, patenti e collaudi impianto GPL/metano. Gestiti con logica e soglie separate per ciascuna categoria.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-info bg-opacity-10 mb-3"><i class="bi bi-send text-info"></i></div>
+        <h5 class="fw-semibold">Invio email e WhatsApp</h5>
+        <p class="text-muted">Il sistema può inviare notifiche direttamente dall'interfaccia e registrarle automaticamente nel log del cliente.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-icon bg-secondary bg-opacity-10 mb-3"><i class="bi bi-shield-lock text-secondary"></i></div>
+        <h5 class="fw-semibold">Accesso protetto</h5>
+        <p class="text-muted">Login sicuro con due livelli di ruolo. L'intera applicazione richiede autenticazione. Nessuna pagina esposta pubblicamente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ STACK -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-4">
+      <p class="section-label">Stack tecnologico</p>
+      <h2 class="fw-bold">Costruito su tecnologie solide</h2>
+    </div>
+    <div class="row justify-content-center g-3">
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">PHP 8.2</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">Symfony 7.3</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">Doctrine ORM 3</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">MySQL 8.0</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">Bootstrap 5.3</span></div>
+      <div class="col-auto"><span class="badge bg-dark fs-6 px-4 py-2 fw-normal">Docker</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ FOOTER -->
+<footer class="py-4">
+  <div class="container text-center">
+    <p class="mb-1"><i class="bi bi-car-front-fill text-primary me-1"></i><strong class="text-white">Gescar2</strong> — Gestionale Centro Revisioni</p>
+    <p class="mb-0 small">Demo dimostrativa · Tutti i dati mostrati sono fittizi · Uso interno</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-/* ═══════════════════════════════════════════════════════════════════════════
-   MOCK DATA  –  riferimento data: 2026-03-16
-   Scadute: prima del 16/03/2026  |  Warning (≤30 gg): entro 15/04/2026
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-var CLIENTI = [
-  { id:1,  nome:'Marco',   cognome:'Rossi',    email:'marco.rossi@email.it',    tel:'3334455667', cf:'RSSMRC80A01H501Z', indirizzo:'Via Roma 12, Milano' },
-  { id:2,  nome:'Giulia',  cognome:'Bianchi',  email:'giulia.bianchi@email.it', tel:'3221133445', cf:'BNCGLI85M41F205X', indirizzo:'Corso Lodi 8, Milano' },
-  { id:3,  nome:'Antonio', cognome:'Ferretti', email:'a.ferretti@email.it',     tel:'3456789012', cf:'FRRNT70C15G337W', indirizzo:'Via Garibaldi 33, Monza' },
-  { id:4,  nome:'Sara',    cognome:'Conti',    email:'sara.conti@email.it',     tel:'3398765432', cf:'CNTSRA92P52L219V', indirizzo:'Viale Europa 5, Sesto S.G.' },
-  { id:5,  nome:'Luca',    cognome:'Marino',   email:'luca.marino@email.it',    tel:'3471234567', cf:'MRNLCU88D10F205K', indirizzo:'Via Torino 22, Cinisello' },
-  { id:6,  nome:'Elena',   cognome:'Greco',    email:'elena.greco@email.it',    tel:'3289876543', cf:'GRCLNE90A41H501P', indirizzo:'Piazza Duomo 1, Rho' },
-  { id:7,  nome:'Roberto', cognome:'Esposito', email:'r.esposito@email.it',     tel:'3365544332', cf:'SPTRBT75E14F839J', indirizzo:'Via Cavour 18, Legnano' },
-  { id:8,  nome:'Paola',   cognome:'Lombardi', email:'p.lombardi@email.it',     tel:'3412233445', cf:'LMBPLA82C55G224M', indirizzo:'Via Manzoni 9, Varese' },
-  { id:9,  nome:'Davide',  cognome:'Ricci',    email:'d.ricci@email.it',        tel:'3503344556', cf:'RCCDVD95A28H501Q', indirizzo:'Corso Sempione 44, Milano' },
-  { id:10, nome:'Chiara',  cognome:'Moretti',  email:'chiara.moretti@email.it', tel:'3356677889', cf:'MRTCHR88T55L750R', indirizzo:'Via delle Rose 3, Gallarate' }
-];
-
-var VETTURE = [
-  { id:1,  targa:'AB123CD', marca:'Fiat',        modello:'Panda',      anno:2018, tipo:'Autovettura', intestatario_id:1 },
-  { id:2,  targa:'EF456GH', marca:'Volkswagen',  modello:'Golf',       anno:2020, tipo:'Autovettura', intestatario_id:1 },
-  { id:3,  targa:'IJ789KL', marca:'Ford',        modello:'Fiesta',     anno:2017, tipo:'Autovettura', intestatario_id:2 },
-  { id:4,  targa:'MN012OP', marca:'Renault',     modello:'Clio',       anno:2019, tipo:'Autovettura', intestatario_id:3 },
-  { id:5,  targa:'QR345ST', marca:'Toyota',      modello:'Yaris',      anno:2021, tipo:'Autovettura', intestatario_id:3 },
-  { id:6,  targa:'UV678WX', marca:'Peugeot',     modello:'208',        anno:2016, tipo:'Autovettura', intestatario_id:4 },
-  { id:7,  targa:'YZ901AB', marca:'Opel',        modello:'Corsa',      anno:2022, tipo:'Autovettura', intestatario_id:5 },
-  { id:8,  targa:'CD234EF', marca:'BMW',         modello:'Serie 3',    anno:2019, tipo:'Autovettura', intestatario_id:6 },
-  { id:9,  targa:'GH567IJ', marca:'Mercedes',    modello:'Classe A',   anno:2020, tipo:'Autovettura', intestatario_id:7 },
-  { id:10, targa:'KL890MN', marca:'Alfa Romeo',  modello:'Giulietta',  anno:2018, tipo:'Autovettura', intestatario_id:8 },
-  { id:11, targa:'OP123QR', marca:'Audi',        modello:'A3',         anno:2021, tipo:'Autovettura', intestatario_id:9 },
-  { id:12, targa:'ST456UV', marca:'Honda',       modello:'Civic',      anno:2017, tipo:'Autovettura', intestatario_id:10 },
-  { id:13, targa:'WX789YZ', marca:'Nissan',      modello:'Micra',      anno:2015, tipo:'Autovettura', intestatario_id:2 },
-  { id:14, targa:'AB012CD', marca:'Hyundai',     modello:'i20',        anno:2020, tipo:'Autovettura', intestatario_id:4 },
-  { id:15, targa:'EF345GH', marca:'Kia',         modello:'Picanto',    anno:2019, tipo:'Autovettura', intestatario_id:6 },
-  { id:16, targa:'IJ678KL', marca:'Citroen',     modello:'C3',         anno:2016, tipo:'Autovettura', intestatario_id:8 },
-  { id:17, targa:'MN901OP', marca:'Dacia',       modello:'Sandero',    anno:2022, tipo:'Autovettura', intestatario_id:10 }
-];
-
-var ASSICURAZIONI = [
-  { id:1,  vettura_id:1,  scadenza:'2026-02-10', note:'Generali – polizza base' },
-  { id:2,  vettura_id:2,  scadenza:'2026-04-01', note:'Unipol – polizza completa' },
-  { id:3,  vettura_id:3,  scadenza:'2026-01-28', note:'AXA – RC auto' },
-  { id:4,  vettura_id:4,  scadenza:'2027-01-15', note:'Allianz – kasko' },
-  { id:5,  vettura_id:5,  scadenza:'2026-03-30', note:'Zurich – polizza base' },
-  { id:6,  vettura_id:6,  scadenza:'2026-08-20', note:'Generali – polizza base' },
-  { id:7,  vettura_id:7,  scadenza:'2026-06-14', note:'Direct – polizza online' },
-  { id:8,  vettura_id:8,  scadenza:'2026-04-10', note:'BNP Paribas – kasko' },
-  { id:9,  vettura_id:9,  scadenza:'2026-11-30', note:'Allianz – full' },
-  { id:10, vettura_id:10, scadenza:'2026-02-28', note:'UnipolSai – base' },
-  { id:11, vettura_id:11, scadenza:'2027-03-15', note:'Helvetia – polizza completa' },
-  { id:12, vettura_id:12, scadenza:'2026-09-22', note:'AXA – standard' },
-  { id:13, vettura_id:13, scadenza:'2026-03-20', note:'Generali – economica' },
-  { id:14, vettura_id:14, scadenza:'2026-12-05', note:'Direct – full' },
-  { id:15, vettura_id:15, scadenza:'2026-07-18', note:'Unipol – family' },
-  { id:16, vettura_id:16, scadenza:'2026-05-09', note:'AXA – base' },
-  { id:17, vettura_id:17, scadenza:'2026-10-25', note:'Zurich – plus' }
-];
-
-var BOLLI = [
-  { id:1,  vettura_id:1,  scadenza:'2026-03-31', note:'' },
-  { id:2,  vettura_id:2,  scadenza:'2026-06-30', note:'' },
-  { id:3,  vettura_id:3,  scadenza:'2026-02-28', note:'' },
-  { id:4,  vettura_id:4,  scadenza:'2026-09-30', note:'' },
-  { id:5,  vettura_id:5,  scadenza:'2026-12-31', note:'' },
-  { id:6,  vettura_id:6,  scadenza:'2026-03-10', note:'' },
-  { id:7,  vettura_id:7,  scadenza:'2027-01-31', note:'' },
-  { id:8,  vettura_id:8,  scadenza:'2026-04-12', note:'' },
-  { id:9,  vettura_id:9,  scadenza:'2026-11-30', note:'' },
-  { id:10, vettura_id:10, scadenza:'2026-08-31', note:'' },
-  { id:11, vettura_id:11, scadenza:'2026-07-31', note:'' },
-  { id:12, vettura_id:12, scadenza:'2026-01-31', note:'' },
-  { id:13, vettura_id:13, scadenza:'2027-02-28', note:'' },
-  { id:14, vettura_id:14, scadenza:'2026-04-08', note:'' },
-  { id:15, vettura_id:15, scadenza:'2026-10-31', note:'' },
-  { id:16, vettura_id:16, scadenza:'2026-05-31', note:'' },
-  { id:17, vettura_id:17, scadenza:'2026-12-31', note:'' }
-];
-
-var PATENTI = [
-  { id:1, numero:'MI0012345A', intestatario_id:1,  scadenza:'2026-04-05', categorie:['B'] },
-  { id:2, numero:'MI9988776B', intestatario_id:3,  scadenza:'2025-12-15', categorie:['B','BE'] },
-  { id:3, numero:'VA1234567C', intestatario_id:5,  scadenza:'2028-07-20', categorie:['B'] },
-  { id:4, numero:'MI3344556D', intestatario_id:7,  scadenza:'2026-03-28', categorie:['B','C'] },
-  { id:5, numero:'RH7654321E', intestatario_id:9,  scadenza:'2027-11-10', categorie:['B'] },
-  { id:6, numero:'LG2233445F', intestatario_id:10, scadenza:'2026-02-01', categorie:['B'] }
-];
-
-var NOTIFICHE_LOG = [
-  { id:1, data:'2026-03-10', destinatario_id:1,  tipo:'Assicurazione', vettura_id:1,    canale:'Email', esito:'Inviata' },
-  { id:2, data:'2026-03-11', destinatario_id:3,  tipo:'Patente',       vettura_id:null, canale:'Email', esito:'Inviata' },
-  { id:3, data:'2026-03-12', destinatario_id:2,  tipo:'Bollo',         vettura_id:3,    canale:'Email', esito:'Inviata' },
-  { id:4, data:'2026-03-13', destinatario_id:6,  tipo:'Bollo',         vettura_id:6,    canale:'SMS',   esito:'Inviata' },
-  { id:5, data:'2026-03-14', destinatario_id:10, tipo:'Patente',       vettura_id:null, canale:'Email', esito:'Inviata' }
-];
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   UTILITY
-   ═══════════════════════════════════════════════════════════════════════════ */
-var TODAY = new Date('2026-03-16T00:00:00');
-
-function parseDate(s) { return s ? new Date(s + 'T00:00:00') : null; }
-function formatDate(s) {
-  if (!s) return '—';
-  var d = parseDate(s);
-  return d.toLocaleDateString('it-IT', { day:'2-digit', month:'2-digit', year:'numeric' });
-}
-function daysLeft(s) {
-  var d = parseDate(s);
-  if (!d) return null;
-  return Math.floor((d - TODAY) / (24*60*60*1000));
-}
-function scadenzaStatus(s) {
-  var dl = daysLeft(s);
-  if (dl === null) return 'unknown';
-  if (dl < 0)  return 'danger';
-  if (dl <= 30) return 'warning';
-  return 'ok';
-}
-function scadenzaBadge(s, label) {
-  var status = scadenzaStatus(s);
-  var dl = daysLeft(s);
-  var cls  = status === 'danger' ? 'badge-scad-danger' : status === 'warning' ? 'badge-scad-warning' : 'badge-scad-ok';
-  var icon = status === 'danger' ? 'bi-exclamation-triangle-fill' : status === 'warning' ? 'bi-clock-history' : 'bi-check-circle-fill';
-  var extra = '';
-  if (dl !== null) {
-    if (dl < 0)   extra = ' (' + Math.abs(dl) + ' gg fa)';
-    else if (dl <= 30) extra = ' (' + dl + ' gg)';
+  // Ricerca live nella tabella clienti
+  function filterTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('#clientiTable tbody tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
   }
-  return '<span class="badge ' + cls + ' fw-normal"><i class="bi ' + icon + ' me-1"></i>' + (label || formatDate(s)) + extra + '</span>';
-}
-function getCliente(id) {
-  for (var i = 0; i < CLIENTI.length; i++) { if (CLIENTI[i].id === id) return CLIENTI[i]; }
-  return null;
-}
-function getVettura(id) {
-  for (var i = 0; i < VETTURE.length; i++) { if (VETTURE[i].id === id) return VETTURE[i]; }
-  return null;
-}
-function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   AGGREGATE: tutte le scadenze come array omogeneo
-   ═══════════════════════════════════════════════════════════════════════════ */
-function getAllScadenze() {
-  var list = [];
-  for (var i = 0; i < ASSICURAZIONI.length; i++) {
-    var a = ASSICURAZIONI[i];
-    var v = getVettura(a.vettura_id);
-    list.push({ tipo:'Assicurazione', scadenza:a.scadenza, vettura_id:a.vettura_id, intestatario_id: v ? v.intestatario_id : null, note:a.note });
-  }
-  for (var i = 0; i < BOLLI.length; i++) {
-    var b = BOLLI[i];
-    var v = getVettura(b.vettura_id);
-    list.push({ tipo:'Bollo', scadenza:b.scadenza, vettura_id:b.vettura_id, intestatario_id: v ? v.intestatario_id : null, note:b.note });
-  }
-  for (var i = 0; i < PATENTI.length; i++) {
-    var p = PATENTI[i];
-    list.push({ tipo:'Patente', scadenza:p.scadenza, vettura_id:null, intestatario_id:p.intestatario_id, note:p.numero });
-  }
-  return list;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   ROUTER
-   ═══════════════════════════════════════════════════════════════════════════ */
-function route() {
-  var hash  = window.location.hash || '#dashboard';
-  var inner = hash.slice(1);
-  var parts = inner.split('-');
-  var view  = parts[0];
-  var idStr = parts[1];
-  var id    = idStr ? parseInt(idStr, 10) : null;
-
-  // active nav
-  document.querySelectorAll('[data-nav]').forEach(function(el) {
-    el.classList.toggle('active', el.getAttribute('data-nav') === view);
-  });
-
-  var container = document.getElementById('app-views');
-  var html = '';
-  switch (view) {
-    case 'dashboard': html = renderDashboard(); break;
-    case 'scadenze':  html = renderScadenze();  break;
-    case 'clienti':   html = renderClienti(''); break;
-    case 'cliente':   html = renderCliente(id); break;
-    case 'veicoli':   html = renderVeicoli();   break;
-    case 'veicolo':   html = renderVeicolo(id); break;
-    case 'notifiche': html = renderNotifiche(); break;
-    case 'cerca':     html = renderCerca(parts.slice(1).join('-')); break;
-    default:          html = renderDashboard();
-  }
-  container.innerHTML = '<div>' + html + '</div>';
-  window.scrollTo(0, 0);
-}
-
-window.addEventListener('hashchange', route);
-window.addEventListener('DOMContentLoaded', route);
-
-/* ── Quick search ──────────────────────────────────────────────────────────── */
-function doQuickSearch() {
-  var q = document.getElementById('quick-search-input').value.trim();
-  if (!q) return;
-  window.location.hash = '#cerca-' + encodeURIComponent(q);
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   VIEW: DASHBOARD
-   ═══════════════════════════════════════════════════════════════════════════ */
-function renderDashboard() {
-  var all     = getAllScadenze();
-  var expired = 0, warning = 0, ok = 0;
-  for (var i = 0; i < all.length; i++) {
-    var st = scadenzaStatus(all[i].scadenza);
-    if (st === 'danger')  expired++;
-    else if (st === 'warning') warning++;
-    else ok++;
-  }
-
-  // Urgent: expired + warning, sorted by date
-  var urgent = all.filter(function(s) { return scadenzaStatus(s.scadenza) !== 'ok'; });
-  urgent.sort(function(a,b) { return new Date(a.scadenza) - new Date(b.scadenza); });
-  urgent = urgent.slice(0, 12);
-
-  var rows = urgent.map(function(s) {
-    var v = s.vettura_id ? getVettura(s.vettura_id) : null;
-    var c = getCliente(s.intestatario_id);
-    var targaCell    = v ? '<a href="#veicolo-' + v.id + '" class="text-decoration-none fw-semibold">' + esc(v.targa) + '</a>' : '—';
-    var clienteCell  = c ? '<a href="#cliente-' + c.id + '" class="text-decoration-none">' + esc(c.cognome) + ' ' + esc(c.nome) + '</a>' : '—';
-    return '<tr>'
-      + '<td>' + scadenzaBadge(s.scadenza) + '</td>'
-      + '<td><span class="badge bg-secondary fw-normal">' + esc(s.tipo) + '</span></td>'
-      + '<td>' + targaCell + '</td>'
-      + '<td>' + clienteCell + '</td>'
-      + '<td><button class="btn btn-sm btn-outline-warning" onclick="openNotifica(' + (s.intestatario_id||0) + ',' + (s.vettura_id||0) + ',\'' + esc(s.tipo) + '\',\'' + esc(s.scadenza) + '\')">'
-      + '<i class="bi bi-bell"></i></button></td>'
-      + '</tr>';
-  }).join('');
-
-  return '<div class="d-flex align-items-center gap-2 mb-3">'
-    + '<h4 class="mb-0"><i class="bi bi-speedometer2 me-2 text-primary"></i>Dashboard</h4>'
-    + '<span class="text-muted small">– ' + TODAY.toLocaleDateString('it-IT') + '</span>'
-    + '</div>'
-
-    + '<div class="row g-3 mb-4">'
-    + '<div class="col-6 col-md-3"><div class="card h-100 kpi-danger"><div class="card-body py-3">'
-    + '<div class="text-muted small mb-1"><i class="bi bi-exclamation-triangle-fill text-danger me-1"></i>Scadute</div>'
-    + '<div class="fs-2 fw-bold text-danger">' + expired + '</div></div></div></div>'
-
-    + '<div class="col-6 col-md-3"><div class="card h-100 kpi-warning"><div class="card-body py-3">'
-    + '<div class="text-muted small mb-1"><i class="bi bi-clock-history text-warning me-1"></i>In scadenza (≤30 gg)</div>'
-    + '<div class="fs-2 fw-bold text-warning">' + warning + '</div></div></div></div>'
-
-    + '<div class="col-6 col-md-3"><div class="card h-100 kpi-ok"><div class="card-body py-3">'
-    + '<div class="text-muted small mb-1"><i class="bi bi-check-circle-fill text-success me-1"></i>Regolari</div>'
-    + '<div class="fs-2 fw-bold text-success">' + ok + '</div></div></div></div>'
-
-    + '<div class="col-6 col-md-3"><div class="card h-100 kpi-total"><div class="card-body py-3">'
-    + '<div class="text-muted small mb-1"><i class="bi bi-list-ul text-primary me-1"></i>Totale</div>'
-    + '<div class="fs-2 fw-bold text-primary">' + all.length + '</div></div></div></div>'
-    + '</div>'
-
-    + '<div class="card">'
-    + '<div class="card-header d-flex align-items-center justify-content-between">'
-    + '<span class="fw-semibold"><i class="bi bi-exclamation-circle text-danger me-2"></i>Scadenze urgenti</span>'
-    + '<a href="#scadenze" class="btn btn-sm btn-outline-secondary">Vedi tutte</a>'
-    + '</div>'
-    + '<div class="table-responsive">'
-    + '<table class="table table-hover table-sm align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Scadenza</th><th>Tipo</th><th>Targa</th><th>Cliente</th><th></th></tr></thead>'
-    + '<tbody>' + (rows || '<tr><td colspan="5" class="text-center text-muted py-3">Nessuna scadenza urgente &#x1F389;</td></tr>') + '</tbody>'
-    + '</table></div></div>';
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   VIEW: SCADENZE (full list)
-   ═══════════════════════════════════════════════════════════════════════════ */
-function renderScadenze() {
-  var all = getAllScadenze();
-  all.sort(function(a,b) { return new Date(a.scadenza) - new Date(b.scadenza); });
-
-  var rows = all.map(function(s) {
-    var v = s.vettura_id ? getVettura(s.vettura_id) : null;
-    var c = getCliente(s.intestatario_id);
-    var targaCell   = v ? '<a href="#veicolo-' + v.id + '" class="text-decoration-none fw-semibold">' + esc(v.targa) + '</a>' : '—';
-    var clienteCell = c ? '<a href="#cliente-' + c.id + '" class="text-decoration-none">' + esc(c.cognome) + ' ' + esc(c.nome) + '</a>' : '—';
-    return '<tr>'
-      + '<td>' + scadenzaBadge(s.scadenza) + '</td>'
-      + '<td><span class="badge bg-secondary fw-normal">' + esc(s.tipo) + '</span></td>'
-      + '<td>' + targaCell + '</td>'
-      + '<td>' + clienteCell + '</td>'
-      + '<td class="text-muted small">' + esc(s.note || '—') + '</td>'
-      + '<td><button class="btn btn-sm btn-outline-warning" onclick="openNotifica(' + (s.intestatario_id||0) + ',' + (s.vettura_id||0) + ',\'' + esc(s.tipo) + '\',\'' + esc(s.scadenza) + '\')">'
-      + '<i class="bi bi-bell"></i></button></td>'
-      + '</tr>';
-  }).join('');
-
-  return '<h4 class="mb-3"><i class="bi bi-calendar-event me-2 text-primary"></i>Tutte le scadenze</h4>'
-    + '<div class="card"><div class="table-responsive">'
-    + '<table class="table table-hover table-sm align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Scadenza</th><th>Tipo</th><th>Targa</th><th>Cliente</th><th>Note</th><th></th></tr></thead>'
-    + '<tbody>' + rows + '</tbody>'
-    + '</table></div></div>';
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   VIEW: CLIENTI (list)
-   ═══════════════════════════════════════════════════════════════════════════ */
-function renderClienti(filter) {
-  var q = filter || '';
-  var list = q
-    ? CLIENTI.filter(function(c) {
-        return (c.cognome + ' ' + c.nome).toLowerCase().indexOf(q.toLowerCase()) !== -1
-            || c.email.toLowerCase().indexOf(q.toLowerCase()) !== -1
-            || c.cf.toLowerCase().indexOf(q.toLowerCase()) !== -1;
-      })
-    : CLIENTI;
-
-  var searchBanner = q
-    ? '<div class="alert alert-info py-2 mb-3 small"><i class="bi bi-search me-1"></i>Risultati per "<strong>' + esc(q) + '</strong>" — ' + list.length + ' trovati. <a href="#clienti" class="alert-link">Rimuovi filtro</a></div>'
-    : '';
-
-  var rows = list.map(function(c) {
-    var vetture = VETTURE.filter(function(v) { return v.intestatario_id === c.id; });
-    var urgent  = getAllScadenze().filter(function(s) { return s.intestatario_id === c.id && scadenzaStatus(s.scadenza) !== 'ok'; });
-    var urgBadge = urgent.length
-      ? '<span class="badge badge-scad-' + scadenzaStatus(urgent[0].scadenza) + ' fw-normal ms-1">' + urgent.length + ' urgenti</span>'
-      : '';
-    var targhe = vetture.map(function(v) {
-      return '<a href="#veicolo-' + v.id + '" class="badge bg-light text-dark border me-1 text-decoration-none">' + esc(v.targa) + '</a>';
-    }).join('');
-    return '<tr>'
-      + '<td><a href="#cliente-' + c.id + '" class="text-decoration-none fw-semibold">' + esc(c.cognome) + ' ' + esc(c.nome) + '</a>' + urgBadge + '</td>'
-      + '<td class="text-muted small"><i class="bi bi-envelope me-1"></i>' + esc(c.email) + '</td>'
-      + '<td class="text-muted small d-none d-md-table-cell"><i class="bi bi-phone me-1"></i>' + esc(c.tel) + '</td>'
-      + '<td class="d-none d-lg-table-cell">' + targhe + '</td>'
-      + '<td><a href="#cliente-' + c.id + '" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a></td>'
-      + '</tr>';
-  }).join('');
-
-  return '<div class="d-flex align-items-center justify-content-between mb-3">'
-    + '<h4 class="mb-0"><i class="bi bi-people me-2 text-primary"></i>Clienti</h4>'
-    + '<span class="text-muted small">' + CLIENTI.length + ' totali</span></div>'
-    + searchBanner
-    + '<div class="card"><div class="table-responsive">'
-    + '<table class="table table-hover align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Nominativo</th><th>Email</th><th class="d-none d-md-table-cell">Telefono</th><th class="d-none d-lg-table-cell">Veicoli</th><th></th></tr></thead>'
-    + '<tbody>' + (rows || '<tr><td colspan="5" class="text-center text-muted py-3">Nessun cliente trovato</td></tr>') + '</tbody>'
-    + '</table></div></div>';
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   VIEW: CLIENTE (detail)
-   ═══════════════════════════════════════════════════════════════════════════ */
-function renderCliente(id) {
-  var c = getCliente(id);
-  if (!c) return '<div class="alert alert-danger">Cliente non trovato.</div>';
-
-  var vetture = VETTURE.filter(function(v) { return v.intestatario_id === c.id; });
-  var patenti = PATENTI.filter(function(p) { return p.intestatario_id === c.id; });
-  var notLog  = NOTIFICHE_LOG.filter(function(n) { return n.destinatario_id === c.id; });
-
-  var vettureRows = vetture.map(function(v) {
-    var ass = null, bol = null;
-    for (var i = 0; i < ASSICURAZIONI.length; i++) { if (ASSICURAZIONI[i].vettura_id === v.id) { ass = ASSICURAZIONI[i]; break; } }
-    for (var i = 0; i < BOLLI.length; i++) { if (BOLLI[i].vettura_id === v.id) { bol = BOLLI[i]; break; } }
-    return '<tr>'
-      + '<td><a href="#veicolo-' + v.id + '" class="text-decoration-none fw-semibold">' + esc(v.targa) + '</a></td>'
-      + '<td>' + esc(v.marca) + ' ' + esc(v.modello) + ' (' + v.anno + ')</td>'
-      + '<td>' + (ass ? scadenzaBadge(ass.scadenza, 'Ass.') : '<span class="text-muted">—</span>') + '</td>'
-      + '<td>' + (bol ? scadenzaBadge(bol.scadenza, 'Bollo') : '<span class="text-muted">—</span>') + '</td>'
-      + '<td><a href="#veicolo-' + v.id + '" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a></td>'
-      + '</tr>';
-  }).join('');
-
-  var patentiRows = patenti.map(function(p) {
-    var cats = p.categorie.map(function(cat) { return '<span class="badge bg-primary fw-normal me-1">' + esc(cat) + '</span>'; }).join('');
-    return '<tr>'
-      + '<td class="fw-semibold">' + esc(p.numero) + '</td>'
-      + '<td>' + cats + '</td>'
-      + '<td>' + scadenzaBadge(p.scadenza) + '</td>'
-      + '<td><button class="btn btn-sm btn-outline-warning" onclick="openNotifica(' + c.id + ',0,\'Patente\',\'' + esc(p.scadenza) + '\')">'
-      + '<i class="bi bi-bell"></i></button></td>'
-      + '</tr>';
-  }).join('');
-
-  var notRows = notLog.map(function(n) {
-    var v = n.vettura_id ? getVettura(n.vettura_id) : null;
-    return '<tr>'
-      + '<td class="text-muted small">' + formatDate(n.data) + '</td>'
-      + '<td><span class="badge bg-secondary fw-normal">' + esc(n.tipo) + '</span></td>'
-      + '<td>' + (v ? '<a href="#veicolo-' + v.id + '" class="text-decoration-none">' + esc(v.targa) + '</a>' : '—') + '</td>'
-      + '<td><span class="badge bg-success fw-normal"><i class="bi bi-check me-1"></i>' + esc(n.esito) + '</span></td>'
-      + '</tr>';
-  }).join('');
-
-  return '<nav aria-label="breadcrumb" class="mb-3"><ol class="breadcrumb">'
-    + '<li class="breadcrumb-item"><a href="#clienti">Clienti</a></li>'
-    + '<li class="breadcrumb-item active">' + esc(c.cognome) + ' ' + esc(c.nome) + '</li>'
-    + '</ol></nav>'
-
-    + '<div class="row g-3 mb-3">'
-    + '<div class="col-md-6"><div class="card h-100">'
-    + '<div class="card-header fw-semibold"><i class="bi bi-person me-2"></i>Dati anagrafici</div>'
-    + '<div class="card-body"><dl class="row mb-0 small">'
-    + '<dt class="col-5 text-muted">Cognome</dt><dd class="col-7">' + esc(c.cognome) + '</dd>'
-    + '<dt class="col-5 text-muted">Nome</dt><dd class="col-7">' + esc(c.nome) + '</dd>'
-    + '<dt class="col-5 text-muted">Email</dt><dd class="col-7"><a href="mailto:' + esc(c.email) + '">' + esc(c.email) + '</a></dd>'
-    + '<dt class="col-5 text-muted">Telefono</dt><dd class="col-7">' + esc(c.tel) + '</dd>'
-    + '<dt class="col-5 text-muted">Indirizzo</dt><dd class="col-7">' + esc(c.indirizzo) + '</dd>'
-    + '</dl></div></div></div>'
-    + '<div class="col-md-6"><div class="card h-100">'
-    + '<div class="card-header fw-semibold"><i class="bi bi-card-text me-2"></i>Dati fiscali</div>'
-    + '<div class="card-body"><dl class="row mb-0 small">'
-    + '<dt class="col-5 text-muted">Cod. Fiscale</dt><dd class="col-7"><span class="font-monospace">' + esc(c.cf) + '</span></dd>'
-    + '</dl></div></div></div>'
-    + '</div>'
-
-    + '<div class="card mb-3">'
-    + '<div class="card-header fw-semibold"><i class="bi bi-car-front me-2"></i>Veicoli (' + vetture.length + ')</div>'
-    + '<div class="table-responsive"><table class="table table-hover table-sm align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Targa</th><th>Veicolo</th><th>Assicurazione</th><th>Bollo</th><th></th></tr></thead>'
-    + '<tbody>' + (vettureRows || '<tr><td colspan="5" class="text-center text-muted py-3">Nessun veicolo</td></tr>') + '</tbody>'
-    + '</table></div></div>'
-
-    + (patenti.length ? '<div class="card mb-3">'
-    + '<div class="card-header fw-semibold"><i class="bi bi-card-text me-2"></i>Patenti (' + patenti.length + ')</div>'
-    + '<div class="table-responsive"><table class="table table-hover table-sm align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Numero</th><th>Categorie</th><th>Scadenza</th><th></th></tr></thead>'
-    + '<tbody>' + patentiRows + '</tbody>'
-    + '</table></div></div>' : '')
-
-    + '<div class="card">'
-    + '<div class="card-header fw-semibold"><i class="bi bi-bell me-2"></i>Storico notifiche (' + notLog.length + ')</div>'
-    + '<div class="table-responsive"><table class="table table-sm align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Data</th><th>Tipo</th><th>Veicolo</th><th>Esito</th></tr></thead>'
-    + '<tbody>' + (notRows || '<tr><td colspan="4" class="text-center text-muted py-3">Nessuna notifica inviata</td></tr>') + '</tbody>'
-    + '</table></div></div>';
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   VIEW: VEICOLI (list)
-   ═══════════════════════════════════════════════════════════════════════════ */
-function renderVeicoli() {
-  var rows = VETTURE.map(function(v) {
-    var c   = getCliente(v.intestatario_id);
-    var ass = null, bol = null;
-    for (var i = 0; i < ASSICURAZIONI.length; i++) { if (ASSICURAZIONI[i].vettura_id === v.id) { ass = ASSICURAZIONI[i]; break; } }
-    for (var i = 0; i < BOLLI.length; i++) { if (BOLLI[i].vettura_id === v.id) { bol = BOLLI[i]; break; } }
-    return '<tr>'
-      + '<td><a href="#veicolo-' + v.id + '" class="text-decoration-none fw-semibold">' + esc(v.targa) + '</a></td>'
-      + '<td>' + esc(v.marca) + ' ' + esc(v.modello) + '</td>'
-      + '<td class="text-muted d-none d-md-table-cell">' + v.anno + '</td>'
-      + '<td>' + (c ? '<a href="#cliente-' + c.id + '" class="text-decoration-none">' + esc(c.cognome) + ' ' + esc(c.nome) + '</a>' : '—') + '</td>'
-      + '<td>' + (ass ? scadenzaBadge(ass.scadenza) : '<span class="text-muted small">—</span>') + '</td>'
-      + '<td>' + (bol ? scadenzaBadge(bol.scadenza) : '<span class="text-muted small">—</span>') + '</td>'
-      + '<td><a href="#veicolo-' + v.id + '" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a></td>'
-      + '</tr>';
-  }).join('');
-
-  return '<div class="d-flex align-items-center justify-content-between mb-3">'
-    + '<h4 class="mb-0"><i class="bi bi-car-front me-2 text-primary"></i>Veicoli</h4>'
-    + '<span class="text-muted small">' + VETTURE.length + ' totali</span></div>'
-    + '<div class="card"><div class="table-responsive">'
-    + '<table class="table table-hover align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Targa</th><th>Veicolo</th><th class="d-none d-md-table-cell">Anno</th><th>Intestatario</th><th>Assicurazione</th><th>Bollo</th><th></th></tr></thead>'
-    + '<tbody>' + rows + '</tbody>'
-    + '</table></div></div>';
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   VIEW: VEICOLO (detail)
-   ═══════════════════════════════════════════════════════════════════════════ */
-function renderVeicolo(id) {
-  var v = getVettura(id);
-  if (!v) return '<div class="alert alert-danger">Veicolo non trovato.</div>';
-  var c   = getCliente(v.intestatario_id);
-  var ass = ASSICURAZIONI.filter(function(a) { return a.vettura_id === v.id; });
-  var bol = BOLLI.filter(function(b) { return b.vettura_id === v.id; });
-
-  var assRows = ass.map(function(a) {
-    return '<tr>'
-      + '<td>' + scadenzaBadge(a.scadenza) + '</td>'
-      + '<td class="text-muted small">' + esc(a.note || '—') + '</td>'
-      + '<td><button class="btn btn-sm btn-outline-warning" onclick="openNotifica(' + (v.intestatario_id||0) + ',' + v.id + ',\'Assicurazione\',\'' + esc(a.scadenza) + '\')">'
-      + '<i class="bi bi-bell"></i></button></td>'
-      + '</tr>';
-  }).join('');
-
-  var bolRows = bol.map(function(b) {
-    return '<tr>'
-      + '<td>' + scadenzaBadge(b.scadenza) + '</td>'
-      + '<td class="text-muted small">' + esc(b.note || '—') + '</td>'
-      + '<td><button class="btn btn-sm btn-outline-warning" onclick="openNotifica(' + (v.intestatario_id||0) + ',' + v.id + ',\'Bollo\',\'' + esc(b.scadenza) + '\')">'
-      + '<i class="bi bi-bell"></i></button></td>'
-      + '</tr>';
-  }).join('');
-
-  return '<nav aria-label="breadcrumb" class="mb-3"><ol class="breadcrumb">'
-    + '<li class="breadcrumb-item"><a href="#veicoli">Veicoli</a></li>'
-    + '<li class="breadcrumb-item active">' + esc(v.targa) + '</li>'
-    + '</ol></nav>'
-
-    + '<div class="card mb-3">'
-    + '<div class="card-header fw-semibold"><i class="bi bi-car-front me-2"></i>' + esc(v.targa) + ' — ' + esc(v.marca) + ' ' + esc(v.modello) + '</div>'
-    + '<div class="card-body"><div class="row g-2 small">'
-    + '<div class="col-6 col-md-3"><span class="text-muted d-block">Marca</span><strong>' + esc(v.marca) + '</strong></div>'
-    + '<div class="col-6 col-md-3"><span class="text-muted d-block">Modello</span><strong>' + esc(v.modello) + '</strong></div>'
-    + '<div class="col-6 col-md-3"><span class="text-muted d-block">Anno</span><strong>' + v.anno + '</strong></div>'
-    + '<div class="col-6 col-md-3"><span class="text-muted d-block">Tipo</span><strong>' + esc(v.tipo) + '</strong></div>'
-    + '</div></div></div>'
-
-    + (c ? '<div class="card mb-3">'
-    + '<div class="card-header fw-semibold"><i class="bi bi-person me-2"></i>Intestatario</div>'
-    + '<div class="card-body small">'
-    + '<a href="#cliente-' + c.id + '" class="fw-semibold text-decoration-none">' + esc(c.cognome) + ' ' + esc(c.nome) + '</a><br>'
-    + '<span class="text-muted">' + esc(c.email) + ' · ' + esc(c.tel) + '</span>'
-    + '</div></div>' : '')
-
-    + '<div class="card mb-3">'
-    + '<div class="card-header fw-semibold"><i class="bi bi-shield-check me-2"></i>Assicurazioni</div>'
-    + '<div class="table-responsive"><table class="table table-sm align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Scadenza</th><th>Note</th><th></th></tr></thead>'
-    + '<tbody>' + (assRows || '<tr><td colspan="3" class="text-center text-muted py-2">Nessuna assicurazione</td></tr>') + '</tbody>'
-    + '</table></div></div>'
-
-    + '<div class="card">'
-    + '<div class="card-header fw-semibold"><i class="bi bi-receipt me-2"></i>Bolli</div>'
-    + '<div class="table-responsive"><table class="table table-sm align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Scadenza</th><th>Note</th><th></th></tr></thead>'
-    + '<tbody>' + (bolRows || '<tr><td colspan="3" class="text-center text-muted py-2">Nessun bollo</td></tr>') + '</tbody>'
-    + '</table></div></div>';
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   VIEW: NOTIFICHE LOG
-   ═══════════════════════════════════════════════════════════════════════════ */
-function renderNotifiche() {
-  var log = NOTIFICHE_LOG.slice().reverse();
-  var rows = log.map(function(n) {
-    var c = getCliente(n.destinatario_id);
-    var v = n.vettura_id ? getVettura(n.vettura_id) : null;
-    return '<tr>'
-      + '<td class="text-muted small">' + formatDate(n.data) + '</td>'
-      + '<td>' + (c ? '<a href="#cliente-' + c.id + '" class="text-decoration-none">' + esc(c.cognome) + ' ' + esc(c.nome) + '</a>' : '—') + '</td>'
-      + '<td>' + (v ? '<a href="#veicolo-' + v.id + '" class="text-decoration-none">' + esc(v.targa) + '</a>' : '—') + '</td>'
-      + '<td><span class="badge bg-secondary fw-normal">' + esc(n.tipo) + '</span></td>'
-      + '<td><span class="badge bg-light text-dark border fw-normal">' + esc(n.canale) + '</span></td>'
-      + '<td><span class="badge bg-success fw-normal"><i class="bi bi-check me-1"></i>' + esc(n.esito) + '</span></td>'
-      + '</tr>';
-  }).join('');
-
-  return '<div class="d-flex align-items-center justify-content-between mb-3">'
-    + '<h4 class="mb-0"><i class="bi bi-bell me-2 text-primary"></i>Storico Notifiche</h4>'
-    + '<span class="text-muted small">' + NOTIFICHE_LOG.length + ' inviate</span></div>'
-    + '<div class="card"><div class="table-responsive">'
-    + '<table class="table table-hover align-middle mb-0">'
-    + '<thead class="table-light"><tr><th>Data</th><th>Cliente</th><th>Veicolo</th><th>Tipo</th><th>Canale</th><th>Esito</th></tr></thead>'
-    + '<tbody>' + (rows || '<tr><td colspan="6" class="text-center text-muted py-3">Nessuna notifica</td></tr>') + '</tbody>'
-    + '</table></div></div>';
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   VIEW: CERCA
-   ═══════════════════════════════════════════════════════════════════════════ */
-function renderCerca(encoded) {
-  var q = decodeURIComponent(encoded);
-
-  var clientiTrovati = CLIENTI.filter(function(c) {
-    return (c.cognome + ' ' + c.nome).toLowerCase().indexOf(q.toLowerCase()) !== -1
-        || c.email.toLowerCase().indexOf(q.toLowerCase()) !== -1
-        || c.cf.toLowerCase().indexOf(q.toLowerCase()) !== -1;
-  });
-  var vettureTrovate = VETTURE.filter(function(v) {
-    return v.targa.toLowerCase().indexOf(q.toLowerCase()) !== -1
-        || v.marca.toLowerCase().indexOf(q.toLowerCase()) !== -1
-        || v.modello.toLowerCase().indexOf(q.toLowerCase()) !== -1;
-  });
-
-  var clientiRows = clientiTrovati.map(function(c) {
-    return '<li class="list-group-item list-group-item-action">'
-      + '<a href="#cliente-' + c.id + '" class="text-decoration-none d-block">'
-      + '<i class="bi bi-person me-2 text-primary"></i>'
-      + '<strong>' + esc(c.cognome) + ' ' + esc(c.nome) + '</strong>'
-      + '<span class="text-muted ms-2 small">' + esc(c.email) + '</span>'
-      + '</a></li>';
-  }).join('');
-
-  var vettureRows = vettureTrovate.map(function(v) {
-    var c = getCliente(v.intestatario_id);
-    return '<li class="list-group-item list-group-item-action">'
-      + '<a href="#veicolo-' + v.id + '" class="text-decoration-none d-block">'
-      + '<i class="bi bi-car-front me-2 text-primary"></i>'
-      + '<strong>' + esc(v.targa) + '</strong>'
-      + '<span class="text-muted ms-2 small">' + esc(v.marca) + ' ' + esc(v.modello) + '</span>'
-      + (c ? '<span class="text-muted ms-1 small">— ' + esc(c.cognome) + ' ' + esc(c.nome) + '</span>' : '')
-      + '</a></li>';
-  }).join('');
-
-  var total = clientiTrovati.length + vettureTrovate.length;
-
-  return '<div class="d-flex align-items-center gap-2 mb-3">'
-    + '<h4 class="mb-0"><i class="bi bi-search me-2 text-primary"></i>Ricerca</h4>'
-    + '<span class="text-muted small">— "' + esc(q) + '" — ' + total + ' risultati</span>'
-    + '<a href="#clienti" class="ms-auto btn btn-sm btn-outline-secondary">Azzera</a>'
-    + '</div>'
-    + (clientiTrovati.length ? '<h6 class="text-muted text-uppercase small fw-semibold mb-2">Clienti (' + clientiTrovati.length + ')</h6><ul class="list-group mb-3">' + clientiRows + '</ul>' : '')
-    + (vettureTrovate.length ? '<h6 class="text-muted text-uppercase small fw-semibold mb-2">Veicoli (' + vettureTrovate.length + ')</h6><ul class="list-group mb-3">' + vettureRows + '</ul>' : '')
-    + (total === 0 ? '<div class="text-center py-5 text-muted"><i class="bi bi-search fs-1 d-block mb-2 opacity-25"></i>Nessun risultato per "<strong>' + esc(q) + '</strong>"</div>' : '');
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   NOTIFICA MODAL
-   ═══════════════════════════════════════════════════════════════════════════ */
-function openNotifica(clienteId, vetturaId, tipo, scadenza) {
-  var c = getCliente(clienteId);
-  var v = vetturaId ? getVettura(vetturaId) : null;
-  if (!c) { showToast('Cliente non trovato', 'danger'); return; }
-
-  var dl = daysLeft(scadenza);
-  var isExpired = dl < 0;
-  var targaInfo = v ? ' per il veicolo <strong>' + v.targa + '</strong> (' + v.marca + ' ' + v.modello + ')' : '';
-  var scadInfo  = isExpired
-    ? 'La <strong>' + tipo + '</strong>' + targaInfo + ' è <span class="text-danger fw-bold">scaduta da ' + Math.abs(dl) + ' giorni</span> (' + formatDate(scadenza) + ').'
-    : 'La <strong>' + tipo + '</strong>' + targaInfo + ' scade <span class="text-warning fw-bold">tra ' + dl + ' giorni</span> (' + formatDate(scadenza) + ').';
-
-  document.getElementById('modal-scad-info').innerHTML = scadInfo;
-  document.getElementById('modal-destinatario').value  = c.cognome + ' ' + c.nome;
-  document.getElementById('modal-email').value         = c.email;
-  document.getElementById('modal-via-email').checked   = true;
-  document.getElementById('modal-via-sms').checked     = false;
-
-  var targaMsg = v ? ' relativo al veicolo ' + v.targa + ' (' + v.marca + ' ' + v.modello + ')' : '';
-  var msg = isExpired
-    ? 'Gentile ' + c.nome + ' ' + c.cognome + ',\n\nla informiamo che la ' + tipo + targaMsg + ' \xe8 scaduta il ' + formatDate(scadenza) + '.\n\nLa preghiamo di provvedere al rinnovo al pi\xf9 presto.\n\nCordiali saluti,\nGescar Centro Revisioni'
-    : 'Gentile ' + c.nome + ' ' + c.cognome + ',\n\nla informiamo che la ' + tipo + targaMsg + ' scadr\xe0 il ' + formatDate(scadenza) + ' (tra ' + dl + ' giorni).\n\nLa invitiamo a provvedere al rinnovo in tempo utile.\n\nCordiali saluti,\nGescar Centro Revisioni';
-  document.getElementById('modal-messaggio').value = msg;
-
-  window._notificaCtx = { clienteId: clienteId, vetturaId: vetturaId, tipo: tipo, scadenza: scadenza };
-
-  var modal = new bootstrap.Modal(document.getElementById('notificaModal'));
-  modal.show();
-}
-
-function inviaNotifica() {
-  var ctx    = window._notificaCtx || {};
-  var canali = [];
-  if (document.getElementById('modal-via-email').checked) canali.push('Email');
-  if (document.getElementById('modal-via-sms').checked)   canali.push('SMS');
-  if (!canali.length) { showToast('Seleziona almeno un canale', 'danger'); return; }
-
-  var c = getCliente(ctx.clienteId);
-  NOTIFICHE_LOG.push({
-    id: NOTIFICHE_LOG.length + 1,
-    data: '2026-03-16',
-    destinatario_id: ctx.clienteId,
-    tipo: ctx.tipo,
-    vettura_id: ctx.vetturaId || null,
-    canale: canali.join('+'),
-    esito: 'Inviata'
-  });
-
-  var modal = bootstrap.Modal.getInstance(document.getElementById('notificaModal'));
-  if (modal) modal.hide();
-  showToast('Notifica inviata a ' + (c ? c.cognome + ' ' + c.nome : '—') + ' via ' + canali.join(' e '), 'success');
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   TOAST
-   ═══════════════════════════════════════════════════════════════════════════ */
-function showToast(msg, type) {
-  type = type || 'success';
-  var tc  = document.getElementById('toast-container');
-  var id  = 'toast-' + Date.now();
-  var icons = {
-    success: 'bi-check-circle-fill text-success',
-    danger:  'bi-exclamation-circle-fill text-danger',
-    info:    'bi-info-circle-fill text-primary'
-  };
-  tc.insertAdjacentHTML('beforeend',
-    '<div id="' + id + '" class="toast align-items-center border-0 bg-white shadow" role="alert">'
-    + '<div class="d-flex">'
-    + '<div class="toast-body"><i class="bi ' + (icons[type] || icons.info) + ' me-2"></i>' + esc(msg) + '</div>'
-    + '<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>'
-    + '</div></div>');
-  var el    = document.getElementById(id);
-  var toast = new bootstrap.Toast(el, { delay: 4000 });
-  toast.show();
-  el.addEventListener('hidden.bs.toast', function() { el.remove(); });
-}
 </script>
 </body>
 </html>
