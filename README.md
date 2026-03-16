@@ -2,7 +2,7 @@
 
 Demo interattiva statica del gestionale **Gescar2** per centri revisioni auto.
 
-> 🔗 **[Apri la demo](https://carlogagliolo.github.io/gescar2-demo)**
+> 🔗 **[Apri la demo](https://carlogagliolo.github.io/Gescar2-demo/)**
 >
 > Tutti i dati mostrati sono completamente fittizi.
 
