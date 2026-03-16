@@ -45,7 +45,7 @@ Niente `docs/`, niente `src/`, niente `composer.json`. Solo questi due file.
 1. Creare un nuovo repo pubblico: `CarloGagliolo/gescar-demo`
 2. Caricare solo `index.html` e `README.md`
 3. Andare su **Settings → Pages → Source: Deploy from branch → main / root**
-4. Dopo ~1 minuto la demo è live su `https://carlogagliolo.github.io/gescar-demo`
+4. Dopo ~1 minuto la demo è live su `https://carlogagliolo.github.io/Gescar2-demo/`
 
 **Comandi:**
 ```bash
@@ -54,7 +54,7 @@ cd gescar-demo
 git init
 git add .
 git commit -m "feat: demo statica Gescar per GitHub Pages"
-git remote add origin https://github.com/CarloGagliolo/gescar-demo.git
+git remote add origin https://github.com/CarloGagliolo/Gescar2-demo
 git push -u origin main
 ```
 
@@ -76,6 +76,5 @@ Non è necessario sincronizzare con il repo di produzione — è una vetrina ind
 - [ ] Nessun dato reale in nessun punto del file HTML
 - [ ] Nessuna chiave, token, API key o URL di produzione
 - [ ] Nessun riferimento al nome del centro reale (sostituire con "Centro Revisioni Demo")
-- [ ] Link `https://carlogagliolo.github.io/gescar-demo` funzionante
+- [ ] Link `https://carlogagliolo.github.io/Gescar2-demo/` funzionante
 - [ ] README aggiornato con il link corretto alla demo live
-

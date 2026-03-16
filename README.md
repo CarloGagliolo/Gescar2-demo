@@ -27,7 +27,7 @@ PHP 8.2 · Symfony 7.3 · Doctrine ORM 3 · MySQL 8.0 · Bootstrap 5.3
 ## Avvio locale
 
 ```bash
-git clone https://github.com/CarloGagliolo/gescar2-demo.git
+git clone https://github.com/CarloGagliolo/Gescar2-demo
 cd gescar2-demo
 open index.html   # oppure trascina il file nel browser
 ```
